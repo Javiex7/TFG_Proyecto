@@ -1,0 +1,28 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    "terminal.integrated.defaultProfile.windows": "WSL",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        },
+        "Git Bash": {
+            "source": "Git Bash"
+        },
+        "WSL": {
+            "path": [
+                "C:\\WINDOWS\\System32\\wsl.exe"
+            ],
+            "args": [],
+            "icon": "terminal-ubuntu-wsl"
+        }
+    }
+}
