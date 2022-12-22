@@ -1,8 +1,16 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <b-navbar toggleable dark="true" variant="dark">
+    <b-navbar-brand href="/"> TFG </b-navbar-brand>
+
+    <b-navbar-toggle target="navbar-toggle-collapse"> </b-navbar-toggle>
+
+    <b-collapse id="navbar-toggle-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item href="/categories">Categorías</b-nav-item>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
+
   <router-view />
 </template>
 

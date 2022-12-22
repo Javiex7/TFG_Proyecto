@@ -8,6 +8,10 @@ class ActivityModel(models.Model):
         THEORY = 1, 'Theory'
         QUIZ = 2, 'Quiz'
 
+    class Meta:
+        verbose_name = "Activity"
+        verbose_name_plural = "Activities"
+
     title = models.CharField(
         max_length=256,
         verbose_name="Título",
@@ -29,8 +33,5 @@ class ActivityModel(models.Model):
         blank=True
     )
     active = models.BooleanField(
-        default=False,
+        default=True,
     )
-
-    def __str__(self):
-        return f"#{self.id} - {self.title}"

@@ -2,6 +2,10 @@ from django.db import models
 
 
 class CategoryModel(models.Model):
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
     title = models.CharField(
         max_length=256,
         verbose_name="Título",
@@ -15,8 +19,5 @@ class CategoryModel(models.Model):
         blank=True
     )
     active = models.BooleanField(
-        default=False,
+        default=True,
     )
-
-    def __str__(self):
-        return f"#{self.id} - {self.title}"

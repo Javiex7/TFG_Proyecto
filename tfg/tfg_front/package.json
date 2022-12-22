@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --host localhost",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^1.2.1",
+    "bootstrap-icons": "^1.10.2",
+    "bootstrap-icons-vue": "^1.8.1",
+    "bootstrap-vue": "^2.23.1",
+    "bootstrap-vue-3": "^0.4.15",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"

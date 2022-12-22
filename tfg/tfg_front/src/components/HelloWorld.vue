@@ -1,4 +1,8 @@
 <template>
+  <nav>
+    <router-link to="/categories">Categories</router-link>
+  </nav>
+  <router-view />
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>

@@ -1,3 +1,9 @@
 from django.contrib import admin
+from categories.models import CategoryModel
 
-# Register your models here.
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'active')
+
+
+admin.site.register(CategoryModel, CategoryAdmin)
