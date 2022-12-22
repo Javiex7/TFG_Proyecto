@@ -26,8 +26,8 @@
                   >Acceder</b-button
                 >
               </b-card>
-            </p>
-          </label>
+            </p></label
+          >
         </b-card-group>
       </div>
     </div>
@@ -42,7 +42,6 @@ export default {
     return {
       fields: [{ key: "title", label: "Título" }],
       categories: [],
-      final_categories: [],
     };
   },
 
@@ -52,9 +51,9 @@ export default {
       axios
         .get(path)
         .then((response) => {
-          this.categories = response.data;
+          this.categories = response.data.results;
           console.log(this.categories);
-          console.log(this.items);
+          console.log("Epa");
         })
         .catch((error) => {
           console.log(error);
