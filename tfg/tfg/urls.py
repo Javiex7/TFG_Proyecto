@@ -16,21 +16,21 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from tfg.views import signup
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 
-# Custom urls
+# Admin urls
 admin.site.site_url = 'http://localhost:8080/'  # Removes the 'View Site' link
 admin.site.site_header = 'Django Administration - TFG'
 
-
-# drf_yasg code starts here
+# Swagger url configuration
 schema_view = get_schema_view(
     openapi.Info(
         title="Swagger API - TFG",
-        default_version='v1',
+        default_version='v1.0',
         description="U.u",
     ),
     public=True,
@@ -42,6 +42,13 @@ urlpatterns = [
          name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
          name='schema-redoc'),
+
     path('admin/', admin.site.urls),
-    path('api/v1.0/', include('categories.urls'))
+
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+
+    path('api/v1.0/', include('categories.urls')),
+
+    path('signup/', view=signup, name="signup"),
 ]

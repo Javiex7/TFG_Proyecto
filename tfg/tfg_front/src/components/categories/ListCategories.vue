@@ -53,7 +53,6 @@ export default {
         .then((response) => {
           this.categories = response.data.results;
           console.log(this.categories);
-          console.log("Epa");
         })
         .catch((error) => {
           console.log(error);
