@@ -47,6 +47,14 @@
                 Acceder
               </button>
             </div>
+            <div class="mb-3">
+              <button
+                v-on:click.stop.prevent="logout"
+                class="btn btn-dark w-100"
+              >
+                Log out
+              </button>
+            </div>
           </div>
           <div class="success-data" v-else>
             <div class="text-center d-flex flex-column">
@@ -61,6 +69,14 @@
       </div>
     </div>
   </div>
+
+  <nav>
+    <p>
+      <router-link v-on:click.stop.prevent="logout" to="/register">
+        Registro inicial
+      </router-link>
+    </p>
+  </nav>
 </template>
 
 <script>
@@ -100,32 +116,66 @@ export default {
       }
     },
 
-    submit: function () {
-      this.validate();
-      if (this.valid) {
-        const formData = {
-          username: this.email,
-          password: this.password,
-          email: this.email,
-        };
-
-        const path = "http://localhost:8000/auth/token/login/";
+    logout: function () {
+      if (this.$store.state.isAuthenticated) {
+        const path = "http://localhost:8000/auth/token/logout/";
 
         axios
-          .post(path, formData)
+          .post(path, localStorage.getItem("token"), {
+            headers: {
+              Authorization: "Token " + localStorage.getItem("token"),
+            },
+          })
           .then((response) => {
-            console.log("Login user: ", response.data);
+            console.log("LOG OUT ", response.data);
 
             const token = response.data.auth_token;
-            this.$store.commit("setToken", token);
+            this.$store.commit("removeToken", token);
 
             axios.defaults.headers.common["Authorization"] = "Token " + token;
 
-            localStorage.setItem("user_token", token);
+            localStorage.removeItem("token", token);
+
+            this.$router.push("/");
           })
           .catch((error) => {
             console.log(error);
           });
+      }
+    },
+
+    submit: function () {
+      this.validate();
+      if (!this.$store.state.isAuthenticated) {
+        if (this.valid) {
+          const formData = {
+            username: this.email,
+            password: this.password,
+            email: this.email,
+          };
+
+          const path = "http://localhost:8000/auth/token/login/";
+
+          axios
+            .post(path, formData)
+            .then((response) => {
+              console.log("LOG IN", response.data);
+
+              const token = response.data.auth_token;
+              this.$store.commit("setToken", token);
+
+              axios.defaults.headers.common["Authorization"] = "Token " + token;
+
+              localStorage.setItem("token", token);
+
+              this.$router.push("/");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      } else {
+        this.$router.push("/");
       }
     },
   },

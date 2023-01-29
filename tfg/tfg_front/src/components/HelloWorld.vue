@@ -1,9 +1,4 @@
 <template>
-  <nav>
-    <p><router-link to="/login"> Login </router-link></p>
-    <p><router-link to="/register"> Register </router-link></p>
-    <p><router-link to="/categories"> Categories </router-link></p>
-  </nav>
   <router-view />
   <div class="hello">
     <h1>{{ msg }}</h1>

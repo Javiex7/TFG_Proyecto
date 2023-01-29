@@ -1,0 +1,55 @@
+:root {
+  --yonder-color: #4b71aa;
+  --saphire-color-10: #385f71;
+  --magonolia-color-20: #f5f0f6;
+  --burlywood-color-30: #d7b377;
+  --frenchBistre-color-40: #8f754f;
+}
+.btn-primary {
+  @include button-variant(
+    $mynewcolor,
+    darken($mynewcolor, 7.5%),
+    darken($mynewcolor, 10%),
+    lighten($mynewcolor, 5%),
+    lighten($mynewcolor, 10%),
+    darken($mynewcolor, 30%)
+  );
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #4b71aa;
+}
+
+nav {
+  padding: 30px;
+}
+
+nav a {
+  font-weight: bold;
+  color: #4b71aa;
+}
+
+nav a.router-link-exact-active {
+  color: #4b71aa;
+}
+
+.btn-primary {
+  color: #f5f0f6 !important;
+  background-color: #385f71 !important;
+  border-color: #385f71 !important;
+}
+
+.btn-primary:hover {
+  color: #212529 !important;
+  background-color: #93a9cc !important;
+  border-color: #93a9cc !important;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(91, 194, 194, 0.5) !important;
+}
