@@ -49,6 +49,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
 
     path('api/v1.0/', include('categories.urls')),
+    path('api/v1.0/', include('profiles.urls')),
 
     path('signup/', view=signup, name="signup"),
 ]

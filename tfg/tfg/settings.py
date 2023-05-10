@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'categories',
     'activities',
+    'profiles'
 ]
 
 REST_FRAMEWORK = {

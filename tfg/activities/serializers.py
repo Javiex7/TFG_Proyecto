@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from activities.models import ActivityModel
+from .models import QuizModel
 
 
-class ActivitySerializer(serializers.ModelSerializer):
+class QuizSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ActivityModel
+        model = QuizModel
         fields = [
             'id',
-            'title',
-            'type',
+            'name',
+            'description',
             'category',
             'active'
         ]
