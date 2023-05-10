@@ -8,6 +8,7 @@
 <script>
 // @ is an alias to /src
 import axios from "axios";
+import Constants from "@/constants";
 
 export default {
   name: "HomeView",
@@ -17,7 +18,7 @@ export default {
     };
   },
   updated() {
-    const path = "http://localhost:8000/auth/users/me/";
+    const path = Constants.AUTH_URL + "users/me/";
 
     if (this.$store.state.isAuthenticated) {
       axios

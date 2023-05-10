@@ -23,7 +23,7 @@ from rest_framework import permissions
 
 
 # Admin urls
-admin.site.site_url = 'http://localhost:8080/'  # Removes the 'View Site' link
+admin.site.site_url = 'http://192.168.1.13:8080/'
 admin.site.site_header = 'Django Administration - TFG'
 
 # Swagger url configuration

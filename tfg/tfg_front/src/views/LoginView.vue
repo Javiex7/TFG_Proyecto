@@ -81,6 +81,7 @@
 
 <script>
 import axios from "axios";
+import Constants from "@/constants";
 
 export default {
   data: function () {
@@ -118,7 +119,7 @@ export default {
 
     logout: function () {
       if (this.$store.state.isAuthenticated) {
-        const path = "http://localhost:8000/auth/token/logout/";
+        const path = Constants.AUTH_URL + "token/logout/";
 
         axios
           .post(path, localStorage.getItem("token"), {
@@ -154,7 +155,7 @@ export default {
             email: this.email,
           };
 
-          const path = "http://localhost:8000/auth/token/login/";
+          const path = Constants.AUTH_URL + "token/login/";
 
           axios
             .post(path, formData)

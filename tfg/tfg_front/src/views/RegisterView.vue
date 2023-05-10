@@ -56,6 +56,7 @@
 
 <script>
 import axios from "axios";
+import Constants from "@/constants";
 
 export default {
   data: function () {
@@ -99,7 +100,7 @@ export default {
           email: this.email,
         };
 
-        const path = "http://localhost:8000/auth/users/";
+        const path = Constants.AUTH_URL + "users/";
 
         axios
           .post(path, formData)

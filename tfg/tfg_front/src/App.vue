@@ -50,6 +50,7 @@
 
 <script>
 import axios from "axios";
+import Constants from "@/constants";
 
 export default {
   name: "App",
@@ -82,10 +83,10 @@ export default {
 
   methods: {
     check_user: function () {
-      const path = "http://localhost:8000/auth/users/me/";
-      console.log("CARGANDO...");
+      const path = Constants.AUTH_URL + "users/me/";
 
       if (this.$store.state.isAuthenticated) {
+        console.log("CARGANDO...");
         axios
           .get(path, {
             headers: {

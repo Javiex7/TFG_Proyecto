@@ -36,6 +36,7 @@
 
 <script>
 import axios from "axios";
+import Constants from "@/constants";
 
 export default {
   data() {
@@ -47,7 +48,8 @@ export default {
 
   methods: {
     getCategories() {
-      const path = "http://localhost:8000/api/v1.0/categories/";
+      const path = Constants.API_URL + "categories/";
+
       axios
         .get(path)
         .then((response) => {
