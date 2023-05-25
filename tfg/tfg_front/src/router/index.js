@@ -5,6 +5,9 @@ import HomeView from "../views/HomeView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
 import UserProfileView from "../views/UserProfileView.vue";
+import CategoryDetailView from "../views/CategoryDetailView.vue";
+import MakeTestView from "../views/MakeTestView.vue";
+import PageNotFoundView from "../views/PageNotFoundView.vue";
 
 // Components
 import ListCategories from "../components/categories/ListCategories";
@@ -25,9 +28,18 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
   {
+    // Try to use the ListCategories component through the HomeView instead
     path: "/categories",
     name: "categories",
     component: ListCategories,
+  },
+  {
+    path: "/categories/:categoryId",
+    component: CategoryDetailView,
+  },
+  {
+    path: "/quizzes/:quizId",
+    component: MakeTestView,
   },
   {
     path: "/login",
@@ -43,6 +55,15 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: UserProfileView,
+  },
+  {
+    // path: "*",
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: PageNotFoundView,
+    meta: {
+      requiresAuth: false,
+    },
   },
 ];
 

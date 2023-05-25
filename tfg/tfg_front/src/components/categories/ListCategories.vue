@@ -1,37 +1,31 @@
 <template>
-  <div class="container">
-    <div class="row" style="margin-top: 2rem">
-      <div class="row">
-        <h2>Categorías!</h2>
-      </div>
+  <!-- Categories display -->
+  <b-card-group deck>
+    <label v-for="category in categories" :key="category.id">
+      <p style="margin: 1.5rem">
+        <b-card
+          :img-alt="category.title"
+          :img-src="category.image"
+          img-height="175rem"
+          img-top
+          style="max-width: 20rem"
+          border-variant="secondary"
+        >
+          <b-card-title :text="category.title" tag="h3" class="text-start" />
 
-      <div class="row" style="margin-top: 2rem">
-        <b-card-group deck>
-          <label v-for="category in categories" :key="category.id">
-            <p style="margin: 1rem">
-              <b-card
-                :title="category.title"
-                img-src="https://demos.creative-tim.com/argon-dashboard-pro-bs4/assets/img/theme/img-1-1000x600.jpg"
-                img-alt="Image"
-                img-top
-                tag="article"
-                style="max-width: 20rem"
-                class="mb-2"
-              >
-                <b-card-text :text="category.content"> </b-card-text>
+          <b-card-text
+            :text="category.short_description"
+            tag="p"
+            class="text-start"
+          />
 
-                <b-button
-                  v-bind:href="'/categories/' + category.id"
-                  variant="primary"
-                  >Acceder</b-button
-                >
-              </b-card>
-            </p></label
-          >
-        </b-card-group>
-      </div>
-    </div>
-  </div>
+          <b-button v-bind:href="'/categories/' + category.id" variant="primary"
+            >Acceder
+          </b-button>
+        </b-card>
+      </p>
+    </label>
+  </b-card-group>
 </template>
 
 <script>
@@ -41,7 +35,6 @@ import Constants from "@/constants";
 export default {
   data() {
     return {
-      fields: [{ key: "title", label: "Título" }],
       categories: [],
     };
   },
@@ -54,7 +47,6 @@ export default {
         .get(path)
         .then((response) => {
           this.categories = response.data.results;
-          console.log(this.categories);
         })
         .catch((error) => {
           console.log(error);

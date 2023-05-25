@@ -1,12 +1,13 @@
 <template>
-  <div>PERFIL DE USUARIO</div>
-  <nav>
-    <p><router-link to="/login"> Login </router-link></p>
-  </nav>
+  <b-container style="padding: 1rem">
+    <div>PERFIL DE USUARIO</div>
+    <nav>
+      <p><router-link to="/login"> Login </router-link></p>
+    </nav>
+  </b-container>
 </template>
 
 <script>
-// @ is an alias to /src
 import axios from "axios";
 import Constants from "@/constants";
 
@@ -38,19 +39,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-h5 {
-  margin: 20px 0 0;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-</style>

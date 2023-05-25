@@ -16,11 +16,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 from tfg.views import signup
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-
 
 # Admin urls
 admin.site.site_url = 'http://192.168.1.13:8080/'
@@ -40,6 +41,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
+
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
          name='schema-redoc'),
 
@@ -47,9 +49,14 @@ urlpatterns = [
 
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('rest_framework.urls',
+                          namespace='rest_framework')),
 
     path('api/v1.0/', include('categories.urls')),
+    path('api/v1.0/', include('activities.urls')),
     path('api/v1.0/', include('profiles.urls')),
 
     path('signup/', view=signup, name="signup"),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

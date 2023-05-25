@@ -3,25 +3,34 @@
   <body>
     <b-navbar
       toggleable="sm"
-      class="py-3"
+      class="py-2"
       dark="true"
-      style="background-color: #4b71aa"
+      style="background-color: #586994"
+      sticky="true"
+      fixed="top"
     >
-      <b-navbar-brand href="/"><h1>TFG</h1></b-navbar-brand>
+      <b-navbar-brand style="margin: 10px" href="/"
+        ><h1>HISTOLOGÍA PRÁCTICA</h1></b-navbar-brand
+      >
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-navbar-toggle
+        style="margin: 10px"
+        target="nav-collapse"
+      ></b-navbar-toggle>
 
-      <!-- Left aligned nav items -->
+      <!-- 
+        Left aligned nav items 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="me-auto">
           <b-nav-item class="me-auto" href="/categories">
             - Categorías</b-nav-item
           >
         </b-navbar-nav>
-      </b-collapse>
+      </b-collapse> 
+      -->
 
       <!-- Right aligned nav items -->
-      <b-collapse id="nav-collapse" is-nav>
+      <b-collapse id="nav-collapse" is-nav style="margin: 10px">
         <b-navbar-nav class="ms-auto">
           <b-button
             v-if="user"
@@ -42,11 +51,42 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <router-view />
+    <router-view style="margin-top: 6rem" />
   </body>
 </template>
 
 <user-info user="{{ user }}" />
+
+<style>
+@font-face {
+  font-family: abel_title;
+  src: url("~@/assets/fonts/Abel-Regular.ttf");
+}
+@font-face {
+  font-family: roboto_regular;
+  src: url("~@/assets/fonts/Roboto/Roboto-Regular.ttf");
+}
+
+p {
+  font-family: roboto_regular;
+}
+
+h1 {
+  font-family: abel_title;
+}
+
+h2 {
+  font-family: abel_title;
+}
+
+h3 {
+  font-family: abel_title;
+}
+
+h4 {
+  font-family: abel_title;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -86,7 +126,7 @@ export default {
       const path = Constants.AUTH_URL + "users/me/";
 
       if (this.$store.state.isAuthenticated) {
-        console.log("CARGANDO...");
+        console.log("Getting user authentication...");
         axios
           .get(path, {
             headers: {

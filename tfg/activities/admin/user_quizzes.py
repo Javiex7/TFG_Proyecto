@@ -3,7 +3,7 @@ from activities.models.user_quizzes import UserQuizModel
 
 
 class UserQuizAdmin(admin.ModelAdmin):
-    list_display = ['user', 'quiz']
+    list_display = ['id', 'user', 'quiz']
 
 
 admin.site.register(UserQuizModel, UserQuizAdmin)

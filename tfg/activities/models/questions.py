@@ -2,10 +2,10 @@ from django.db import models
 
 
 class Options(models.TextChoices):
-    OPTION_A = "Opción A"
-    OPTION_B = "Opción B"
-    OPTION_C = "Opción C"
-    OPTION_D = "Opción D"
+    OPTION_A = "A"
+    OPTION_B = "B"
+    OPTION_C = "C"
+    OPTION_D = "D"
 
 
 class QuestionModel(models.Model):
@@ -52,6 +52,7 @@ class QuestionModel(models.Model):
         max_length=256,
         choices=Options.choices,
         default=Options.OPTION_A,
+        verbose_name="Opción correcta",
     )
 
     def __str__(self):

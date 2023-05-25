@@ -1,82 +1,86 @@
 <template>
-  <div class="container mt-5">
-    <span><h1>Iniciar sesión</h1></span>
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-6">
-        <div class="card px-5 py-5">
-          <div class="form-data" v-if="!submitted">
-            <div class="forms-inputs mb-4">
-              <span><b>- Correo</b></span>
-              <input
-                class="label_margin"
-                autocomplete="off"
-                type="text"
-                v-model="email"
-                v-bind:class="{
-                  'form-control': true,
-                  'is-invalid': !validEmail(email) && emailBlured,
-                }"
-                v-on:blur="emailBlured = true"
-              />
-              <div class="invalid-feedback">
-                Utiliza un correo electrónico válido
+  <b-container style="padding: 1rem">
+    <div class="container mt-5">
+      <span><h1>Iniciar sesión</h1></span>
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+          <div class="card px-5 py-5">
+            <div class="form-data" v-if="!submitted">
+              <div class="forms-inputs mb-4">
+                <span><b>- Correo</b></span>
+                <input
+                  class="label_margin"
+                  autocomplete="off"
+                  type="text"
+                  v-model="email"
+                  v-bind:class="{
+                    'form-control': true,
+                    'is-invalid': !validEmail(email) && emailBlured,
+                  }"
+                  v-on:blur="emailBlured = true"
+                />
+                <div class="invalid-feedback">
+                  Utiliza un correo electrónico válido
+                </div>
+              </div>
+              <div class="forms-inputs mb-4">
+                <span><b>- Contraseña</b></span>
+                <input
+                  class="label_margin"
+                  autocomplete="off"
+                  type="password"
+                  v-model="password"
+                  v-bind:class="{
+                    'form-control': true,
+                    'is-invalid': !validPassword(password) && passwordBlured,
+                  }"
+                  v-on:blur="passwordBlured = true"
+                />
+                <div class="invalid-feedback">
+                  La contraseña debe tener más de 8 caracteres
+                </div>
+              </div>
+              <div class="mb-3">
+                <button
+                  v-on:click.stop.prevent="submit"
+                  class="btn btn-dark w-100"
+                >
+                  Acceder
+                </button>
+              </div>
+              <div class="mb-3">
+                <button
+                  v-on:click.stop.prevent="logout"
+                  class="btn btn-dark w-100"
+                >
+                  Log out
+                </button>
               </div>
             </div>
-            <div class="forms-inputs mb-4">
-              <span><b>- Contraseña</b></span>
-              <input
-                class="label_margin"
-                autocomplete="off"
-                type="password"
-                v-model="password"
-                v-bind:class="{
-                  'form-control': true,
-                  'is-invalid': !validPassword(password) && passwordBlured,
-                }"
-                v-on:blur="passwordBlured = true"
-              />
-              <div class="invalid-feedback">
-                La contraseña debe tener más de 8 caracteres
+            <div class="success-data" v-else>
+              <div class="text-center d-flex flex-column">
+                <i class="bx bxs-badge-check"></i>
+                <span class="text-center fs-1"
+                  >You have been logged in <br />
+                  Successfully</span
+                >
               </div>
-            </div>
-            <div class="mb-3">
-              <button
-                v-on:click.stop.prevent="submit"
-                class="btn btn-dark w-100"
-              >
-                Acceder
-              </button>
-            </div>
-            <div class="mb-3">
-              <button
-                v-on:click.stop.prevent="logout"
-                class="btn btn-dark w-100"
-              >
-                Log out
-              </button>
-            </div>
-          </div>
-          <div class="success-data" v-else>
-            <div class="text-center d-flex flex-column">
-              <i class="bx bxs-badge-check"></i>
-              <span class="text-center fs-1"
-                >You have been logged in <br />
-                Successfully</span
-              >
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <nav>
-    <p>
-      <router-link v-on:click.stop.prevent="logout" to="/register">
-        Registro inicial
-      </router-link>
-    </p>
-  </nav>
+    <b-row style="padding: 1rem">
+      <nav>
+        <p>
+          <router-link v-on:click.stop.prevent="logout" to="/register">
+            Registro inicial
+          </router-link>
+        </p>
+      </nav>
+    </b-row>
+  </b-container>
 </template>
 
 <script>

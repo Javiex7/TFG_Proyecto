@@ -3,7 +3,7 @@ from activities.models.questions import QuestionModel
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['question', 'code']
+    list_display = ['id', 'question', 'code']
 
 
 admin.site.register(QuestionModel, QuestionAdmin)

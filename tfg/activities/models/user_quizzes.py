@@ -13,17 +13,30 @@ class UserQuizModel(models.Model):
     quiz = models.ForeignKey(
         QuizModel,
         related_name='user_quizzes',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         verbose_name="Quiz"
     )
 
     user = models.ForeignKey(
         User,
         related_name='user_quizzes',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         verbose_name="Usuario"
+    )
+
+    tries = models.IntegerField(
+        verbose_name="Intentos sobre el quiz actual",
+        default=0
+    )
+
+    correct_answers = models.IntegerField(
+        verbose_name="Respuestas/puntos consegidos con este quiz",
+        default=0
+    )
+
+    best_time = models.DurationField(
+        verbose_name="Mejor tiempo",
+        help_text="Mejor tiempo conseguido por el usuario en este quiz",
+        null=True,
+        blank=True
     )

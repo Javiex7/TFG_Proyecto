@@ -3,7 +3,7 @@ from activities.models.quizzes import QuizModel
 
 
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ['name', 'active']
+    list_display = ['id', 'name', 'active']
     filter_horizontal = ['questions',]
 
 

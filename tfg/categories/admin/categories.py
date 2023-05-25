@@ -3,7 +3,8 @@ from categories.models import CategoryModel
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['title', 'active']
+    list_display = ['id', 'title', 'active']
+    filter_horizontal = ['files',]
 
 
 admin.site.register(CategoryModel, CategoryAdmin)

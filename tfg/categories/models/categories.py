@@ -1,4 +1,5 @@
 from django.db import models
+from categories.models.documents_files import DocumentFileModel
 
 
 class CategoryModel(models.Model):
@@ -22,6 +23,11 @@ class CategoryModel(models.Model):
         verbose_name="Contenido teórico",
         help_text="Contenido 'teórico' incluido en la página de la categoría",
         null=True,
+        blank=True
+    )
+    files = models.ManyToManyField(
+        DocumentFileModel,
+        related_name="documents",
         blank=True
     )
     image = models.ImageField(
