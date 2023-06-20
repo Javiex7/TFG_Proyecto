@@ -1,16 +1,15 @@
 <template>
   <b-container style="padding: 1rem">
-    <div class="container mt-5">
-      <span><h1>Nuevo usuario</h1></span>
-      <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-          <div class="card px-5 py-5">
-            <div class="form-data">
+    <h1 style="padding: 2rem">Nuevo usuario</h1>
+    <b-row class="justify-content-center">
+      <b-col lg="5" md="8">
+        <b-card>
+          <b-container>
+            <b-row class="justify-content-center">
               <div class="forms-inputs mb-4">
                 <span><b>- Correo</b></span>
                 <input
                   class="label_margin"
-                  autocomplete="off"
                   type="text"
                   v-model="email"
                   v-bind:class="{
@@ -40,19 +39,32 @@
                   La contraseña debe tener más de 8 caracteres
                 </div>
               </div>
-              <div class="mb-3">
-                <button
-                  v-on:click.stop.prevent="submit"
-                  class="btn btn-dark w-100"
-                >
-                  Registrarse!
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </b-row>
+
+            <b-row style="margin-bottom: 1rem" class="justify-content-center">
+              <b-col cols="8">
+                <div style="margin-top: 1rem">
+                  <b-button
+                    v-on:click.stop.prevent="submit"
+                    class="btn btn-dark w-100"
+                    variant="primary"
+                  >
+                    Crear usuario
+                  </b-button>
+                </div>
+              </b-col>
+            </b-row>
+          </b-container>
+        </b-card>
+      </b-col>
+    </b-row>
+
+    <b-row style="margin-top: 2rem" class="justify-content-center">
+      <p>
+        Ya tienes cuenta ->
+        <a class="custom-a" href="/login">Iniciar sesión</a>
+      </p>
+    </b-row>
   </b-container>
 </template>
 
@@ -95,6 +107,10 @@ export default {
 
     submit: function () {
       this.validate();
+      if (this.$store.state.isAuthenticated) {
+        alert("Antes de crear un nuevo usuario debes cerrar sesión");
+        this.$router.push("/login");
+      }
       if (this.valid) {
         const formData = {
           username: this.email,
@@ -106,12 +122,36 @@ export default {
 
         axios
           .post(path, formData)
-          .then((response) => {
+          .then(() => {
             this.$router.push("/login");
-            console.log("Register user: ", response);
           })
           .catch((error) => {
+            if (!error.response) return;
+
             console.log(error);
+
+            switch (error.response.status) {
+              case 400:
+                if (
+                  error.response.data.username &&
+                  error.response.data.username[0] ===
+                    "A user with that username already exists."
+                ) {
+                  alert(
+                    "Ya existe un usuario con ese correo asociado. Intenta con otro correo o pide ayuda a tu administrador."
+                  );
+                } else {
+                  alert("Ups, ha ocurrido un error inesperado.");
+                  localStorage.clear();
+                  this.$router.go();
+                }
+                break;
+
+              default:
+                alert("Ups, ha ocurrido un error inesperado.");
+                localStorage.clear();
+                this.$router.go();
+            }
           });
       }
     },

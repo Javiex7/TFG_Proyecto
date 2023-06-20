@@ -9,12 +9,16 @@
       sticky="true"
       fixed="top"
     >
-      <b-navbar-brand style="margin: 10px" href="/"
-        ><h1>HISTOLOGÍA PRÁCTICA</h1></b-navbar-brand
-      >
+      <b-navbar-brand href="/" style="padding: 1rem; margin: 0px">
+        <h2 class="align-bottom" style="margin: 0px">
+          <a class="title-a">
+            <i class="bi bi-fingerprint"></i> HISTOLOGÍA PRÁCTICA
+          </a>
+        </h2>
+      </b-navbar-brand>
 
       <b-navbar-toggle
-        style="margin: 10px"
+        style="margin: 0.5rem"
         target="nav-collapse"
       ></b-navbar-toggle>
 
@@ -32,30 +36,40 @@
       <!-- Right aligned nav items -->
       <b-collapse id="nav-collapse" is-nav style="margin: 10px">
         <b-navbar-nav class="ms-auto">
-          <b-button
-            v-if="user"
-            class="me-auto"
-            type="link"
-            href="/profile"
-            variant="primary"
-            >{{ user.email }}</b-button
-          >
-          <b-button
-            v-if="!user"
-            class="me-auto"
-            type="link"
-            href="/login"
-            variant="primary"
-            >Inicio de sesión</b-button
-          >
+          <b-col class="text-start">
+            <b-button
+              v-if="userProfile"
+              type="link"
+              href="/profile"
+              variant="primary"
+              >{{ userProfile.userName }}
+            </b-button>
+
+            <b-badge
+              style="margin: 0.5rem"
+              class="highlightText"
+              v-if="userProfile"
+              variant="dark"
+              pill
+            >
+              {{ userProfile.points }} Puntos <i class="bi bi-stars"></i>
+            </b-badge>
+
+            <b-button
+              v-else
+              class="me-auto"
+              type="link"
+              href="/login"
+              variant="primary"
+              >Inicio de sesión</b-button
+            >
+          </b-col>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <router-view style="margin-top: 6rem" />
+    <router-view style="margin-top: 4.75rem" />
   </body>
 </template>
-
-<user-info user="{{ user }}" />
 
 <style>
 @font-face {
@@ -86,6 +100,10 @@ h3 {
 h4 {
   font-family: abel_title;
 }
+
+h5 {
+  font-family: abel_title;
+}
 </style>
 
 <script>
@@ -96,9 +114,69 @@ export default {
   name: "App",
   data: function () {
     return {
-      user: null,
+      userName: null,
+      userProfile: null,
     };
   },
+
+  methods: {
+    checkUser() {
+      const path = Constants.AUTH_URL + "users/me/";
+
+      if (this.$store.state.isAuthenticated) {
+        axios
+          .get(path, {
+            headers: {
+              Authorization: "Token " + localStorage.getItem("token"),
+            },
+          })
+          .then(() => {
+            this.getProfile();
+          })
+          .catch((error) => {
+            console.log(error.response.data);
+          });
+      }
+    },
+
+    getProfile() {
+      const path = Constants.API_URL + "profiles/getProfile/";
+
+      const headers = {
+        Authorization: "Token " + this.$store.state.token,
+      };
+
+      axios
+        .get(path, { headers })
+        .then((response) => {
+          this.userProfile = response.data;
+          const updatedProfile = {
+            userName: this.userProfile.user.email,
+            points: this.userProfile.points,
+            isUpdated: true,
+          };
+          localStorage.setItem("profile", JSON.stringify(updatedProfile));
+          this.userProfile = JSON.parse(localStorage.getItem("profile"));
+        })
+        .catch((error) => {
+          console.log(error);
+          localStorage.clear();
+          this.$router.go();
+        });
+    },
+
+    updateUserInfo() {
+      if (this.$store.state.isAuthenticated && this.userProfile)
+        return this.performUserUpdate();
+    },
+
+    performUserUpdate() {
+      this.getProfile();
+      this.userProfile = JSON.parse(localStorage.getItem("profile"));
+      return this.userProfile;
+    },
+  },
+
   beforeCreate() {
     this.$store.commit("initializeStore");
 
@@ -112,37 +190,21 @@ export default {
   },
 
   created() {
-    this.check_user();
+    this.userProfile = JSON.parse(localStorage.getItem("profile"));
+    if (this.$store.state.isAuthenticated && this.userProfile) {
+      if (!this.userProfile.isUpdated) {
+        // Logged user without profile data
+        this.performUserUpdate();
+      }
+    } else {
+      localStorage.clear();
+    }
   },
 
   watch: {
     "$store.state.token": function () {
-      this.check_user();
-    },
-  },
-
-  methods: {
-    check_user: function () {
-      const path = Constants.AUTH_URL + "users/me/";
-
-      if (this.$store.state.isAuthenticated) {
-        console.log("Getting user authentication...");
-        axios
-          .get(path, {
-            headers: {
-              Authorization: "Token " + localStorage.getItem("token"),
-            },
-          })
-          .then((response) => {
-            this.user = response.data;
-            console.log(this.user);
-          })
-          .catch((error) => {
-            console.log(error.response.data);
-          });
-      } else {
-        this.user = null;
-      }
+      this.userProfile = JSON.parse(localStorage.getItem("profile"));
+      this.checkUser();
     },
   },
 };

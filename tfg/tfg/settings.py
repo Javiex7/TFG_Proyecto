@@ -26,19 +26,27 @@ SECRET_KEY = 'django-insecure-*i7nhk%fuc^f0n25=2!d00x&5*@n9syra7sk74d+h%k31$scp)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "192.168.1.13"]
+ALLOWED_HOSTS = ["localhost", "192.168.1.13", "192.168.0.17"]
 
 # Application definition
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+# SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-    'http://192.168.1.13:8080',
+    'http://localhost:8080',  # Local machine petitions
+    'http://192.168.1.13:8080',  # DEV-LAN Testing
 )
 
 CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
                       'content-type', 'accept', 'origin', 'authorization', 'authoritation ')
+
+DJOSER = {
+    'PERMISSIONS': {
+        'user_list': ['rest_framework.permissions.IsAdminUser'],
+    }
+
+}
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': True,

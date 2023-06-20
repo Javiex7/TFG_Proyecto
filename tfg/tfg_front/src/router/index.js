@@ -7,7 +7,10 @@ import LoginView from "../views/LoginView.vue";
 import UserProfileView from "../views/UserProfileView.vue";
 import CategoryDetailView from "../views/CategoryDetailView.vue";
 import MakeTestView from "../views/MakeTestView.vue";
+import PackView from "../views/PackView.vue";
 import PageNotFoundView from "../views/PageNotFoundView.vue";
+import GeneralPracticeView from "../views/GeneralPracticeView.vue";
+import GroupRankingView from "../views/GroupRankingView.vue";
 
 // Components
 import ListCategories from "../components/categories/ListCategories";
@@ -17,15 +20,6 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-  },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
   {
     // Try to use the ListCategories component through the HomeView instead
@@ -40,6 +34,14 @@ const routes = [
   {
     path: "/quizzes/:quizId",
     component: MakeTestView,
+  },
+  {
+    path: "/packs/:packId",
+    component: PackView,
+  },
+  {
+    path: "/general-practice",
+    component: GeneralPracticeView,
   },
   {
     path: "/login",
@@ -57,7 +59,11 @@ const routes = [
     component: UserProfileView,
   },
   {
-    // path: "*",
+    path: "/ranking",
+    name: "ranking",
+    component: GroupRankingView,
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: PageNotFoundView,

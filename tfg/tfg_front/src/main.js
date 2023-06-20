@@ -10,4 +10,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import "./assets/main.css";
 
-createApp(App).use(store).use(router, axios).use(BootstrapVue).mount("#app");
+const app = createApp(App).use(store).use(router, axios).use(BootstrapVue);
+
+app.config.globalProperties.$userProfile = null;
+app.mount("#app");

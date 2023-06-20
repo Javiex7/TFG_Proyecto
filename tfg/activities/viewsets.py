@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework import status
@@ -7,7 +9,7 @@ from rest_framework.decorators import action
 
 from profiles.models import Profile
 from .models import UserQuizModel, QuizModel
-from .serializers import UserQuizSerializer, UserQuizAnsweredSerializer
+from .serializers import ShortQuizSerializer, UserQuizSerializer, UserQuizAnsweredSerializer
 
 
 class UserQuizViewSet(GenericViewSet, RetrieveModelMixin):
@@ -42,6 +44,15 @@ class UserQuizViewSet(GenericViewSet, RetrieveModelMixin):
         serializer = self.get_serializer(user_quiz)
         return Response(serializer.data, status.HTTP_201_CREATED)
 
+    @action(detail=False, methods=['get'])
+    def getGenericQuizzes(self, request, *args, **kwargs):
+        genericQuizzes = QuizModel.objects.filter(category__generic=True)
+        if not genericQuizzes:
+            return Response("No generic quiz/quizzes available", status.HTTP_404_NOT_FOUND)
+
+        serializer = ShortQuizSerializer(genericQuizzes, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
     @action(detail=True, methods=['patch'])
     def startAttempt(self, request, *args, **kwargs):
         # Try to get a created user_quiz by an authenticated user
@@ -72,6 +83,7 @@ class UserQuizViewSet(GenericViewSet, RetrieveModelMixin):
 
         # Correct the quiz made by the user
         userResponses = request.data['userResponses']
+        elapsedTime = request.data['elapsedTime']
         questions = user_quiz.quiz.questions.values('id', 'correct_option')
 
         correctOptions = 0
@@ -80,11 +92,23 @@ class UserQuizViewSet(GenericViewSet, RetrieveModelMixin):
             if i in questions:
                 correctOptions += 1
 
+        # Check the elapsed time when improving the previous score
+        saveElapsedTime = False
+        if correctOptions >= user_quiz.correct_answers:
+            elapsedTime = datetime.timedelta(
+                milliseconds=elapsedTime)  # Miliseconds to seconds
+            if not user_quiz.best_time or user_quiz.best_time > elapsedTime:
+                user_quiz.best_time = elapsedTime
+                saveElapsedTime = True
+
         if correctOptions <= user_quiz.correct_answers:
             answeredQuiz = {"correct_answers": correctOptions, "points": 0}
             serializer = UserQuizAnsweredSerializer(answeredQuiz)
+            if saveElapsedTime:
+                user_quiz.save()
             return Response(serializer.data, status.HTTP_200_OK)
 
+        # Update the user_quiz with the results
         obtained_points = correctOptions - user_quiz.correct_answers
         user_quiz.correct_answers = correctOptions
         user_quiz.save()

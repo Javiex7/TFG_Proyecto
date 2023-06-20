@@ -1,16 +1,15 @@
 <template>
   <b-container style="padding: 1rem">
-    <div class="container mt-5">
-      <span><h1>Iniciar sesión</h1></span>
-      <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-          <div class="card px-5 py-5">
-            <div class="form-data" v-if="!submitted">
+    <h1 style="padding: 2rem">Iniciar sesión</h1>
+    <b-row class="justify-content-center">
+      <b-col lg="5" md="8">
+        <b-card>
+          <b-container>
+            <b-row class="justify-content-center">
               <div class="forms-inputs mb-4">
                 <span><b>- Correo</b></span>
                 <input
                   class="label_margin"
-                  autocomplete="off"
                   type="text"
                   v-model="email"
                   v-bind:class="{
@@ -40,48 +39,56 @@
                   La contraseña debe tener más de 8 caracteres
                 </div>
               </div>
-              <div class="mb-3">
-                <button
-                  v-on:click.stop.prevent="submit"
-                  class="btn btn-dark w-100"
-                >
-                  Acceder
-                </button>
-              </div>
-              <div class="mb-3">
-                <button
-                  v-on:click.stop.prevent="logout"
-                  class="btn btn-dark w-100"
-                >
-                  Log out
-                </button>
-              </div>
-            </div>
-            <div class="success-data" v-else>
-              <div class="text-center d-flex flex-column">
-                <i class="bx bxs-badge-check"></i>
-                <span class="text-center fs-1"
-                  >You have been logged in <br />
-                  Successfully</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </b-row>
 
-    <b-row style="padding: 1rem">
-      <nav>
-        <p>
-          <router-link v-on:click.stop.prevent="logout" to="/register">
-            Registro inicial
-          </router-link>
-        </p>
-      </nav>
+            <b-row style="margin-bottom: 1rem" class="justify-content-center">
+              <b-col cols="8">
+                <div style="margin-top: 1rem">
+                  <b-button
+                    v-on:click.stop.prevent="submit"
+                    class="btn btn-dark w-100"
+                    variant="primary"
+                  >
+                    Acceder
+                  </b-button>
+                </div>
+                <div style="margin-top: 1rem">
+                  <b-button
+                    v-on:click.stop.prevent="logout"
+                    class="btn btn-dark w-100"
+                    variant="dark"
+                  >
+                    Cerrar sesión
+                  </b-button>
+                </div>
+              </b-col>
+            </b-row>
+          </b-container>
+        </b-card>
+      </b-col>
+    </b-row>
+
+    <b-row
+      style="margin-top: 2rem"
+      class="justify-content-center"
+      v-if="$store.state.isAuthenticated == false"
+    >
+      <p>
+        ¿No te has registrado aún? ->
+        <a class="custom-a" href="/register">Registro inicial</a>
+      </p>
     </b-row>
   </b-container>
 </template>
+
+<style>
+.label_margin {
+  margin-top: 1rem;
+}
+.forms-inputs {
+  text-align: left;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -93,9 +100,9 @@ export default {
       email: "",
       emailBlured: false,
       valid: false,
-      submitted: false,
       password: "",
       passwordBlured: false,
+      submitted: false,
     };
   },
 
@@ -108,20 +115,21 @@ export default {
       }
     },
 
-    validEmail: function (email) {
+    validEmail(email) {
       var re = /(.+)@(.+){2,}\.(.+){2,}/;
       if (re.test(email.toLowerCase())) {
         return true;
       }
     },
 
-    validPassword: function (password) {
+    validPassword(password) {
       if (password.length > 7) {
         return true;
       }
     },
 
-    logout: function () {
+    // Log-out
+    logout() {
       if (this.$store.state.isAuthenticated) {
         const path = Constants.AUTH_URL + "token/logout/";
 
@@ -132,24 +140,22 @@ export default {
             },
           })
           .then((response) => {
-            console.log("LOG OUT ", response.data);
-
             const token = response.data.auth_token;
             this.$store.commit("removeToken", token);
-
-            axios.defaults.headers.common["Authorization"] = "Token " + token;
-
-            localStorage.removeItem("token", token);
+            localStorage.clear();
 
             this.$router.push("/");
           })
           .catch((error) => {
             console.log(error);
+            localStorage.clear();
+            this.$router.go();
           });
       }
     },
 
-    submit: function () {
+    // Submit -> Log-in
+    submit() {
       this.validate();
       if (!this.$store.state.isAuthenticated) {
         if (this.valid) {
@@ -164,34 +170,59 @@ export default {
           axios
             .post(path, formData)
             .then((response) => {
-              console.log("LOG IN", response.data);
-
               const token = response.data.auth_token;
+              const baseProfile = {
+                userName: "",
+                points: 0,
+                isUpdated: false,
+              };
               this.$store.commit("setToken", token);
+              localStorage.setItem("token", token);
+              localStorage.setItem("profile", JSON.stringify(baseProfile));
 
               axios.defaults.headers.common["Authorization"] = "Token " + token;
-
-              localStorage.setItem("token", token);
 
               this.$router.push("/");
             })
             .catch((error) => {
+              if (!error.response) return;
+
               console.log(error);
+
+              switch (error.response.status) {
+                case 400:
+                  if (
+                    error.response.data.non_field_errors[0] &&
+                    error.response.data.non_field_errors[0] ===
+                      "Unable to log in with provided credentials."
+                  ) {
+                    alert(
+                      "Credenciales erróneas. Intenta iniciar de sesión nuevamente."
+                    );
+                  }
+                  break;
+
+                case 401:
+                  alert(
+                    "Ups, ha ocurrido un error. Intenta iniciar de sesión nuevamente."
+                  );
+                  localStorage.clear();
+                  this.$router.go();
+                  break;
+
+                default:
+                  alert("Ups, ha ocurrido un error inesperado.");
+                  localStorage.clear();
+                  this.$router.go();
+              }
             });
         }
       } else {
-        this.$router.push("/");
+        alert(
+          "Ya has iniciado sesión, prueba a cerrar sesión antes de continuar."
+        );
       }
     },
   },
 };
 </script>
-
-<style>
-.label_margin {
-  margin-top: 1rem;
-}
-.forms-inputs {
-  text-align: left;
-}
-</style>

@@ -17,6 +17,17 @@ class QuestionSerializer(serializers.ModelSerializer):
         ]
 
 
+class ShortQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizModel
+        fields = [
+            'id',
+            'name',
+            'description',
+            'max_tries'
+        ]
+
+
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(read_only=True, many=True)
 
@@ -28,8 +39,7 @@ class QuizSerializer(serializers.ModelSerializer):
             'description',
             'category',
             'max_tries',
-            'questions',
-            'active'
+            'questions'
         ]
 
 
@@ -43,7 +53,8 @@ class UserQuizSerializer(serializers.ModelSerializer):
             'quiz',
             'user',
             'tries',
-            'correct_answers'
+            'correct_answers',
+            'best_time'
         ]
 
 

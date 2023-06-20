@@ -1,9 +1,11 @@
 const BASE_URL = "http://192.168.1.13:8000";
 const API_URL = "http://192.168.1.13:8000/api/v1.0/";
 const AUTH_URL = "http://192.168.1.13:8000/auth/";
+const POINTS_PACKS_IMG_NUMBER = 4;
 
 export default {
   BASE_URL: BASE_URL,
   API_URL: API_URL,
   AUTH_URL: AUTH_URL,
+  POINTS_PACKS_IMG_NUMBER: POINTS_PACKS_IMG_NUMBER,
 };

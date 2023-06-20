@@ -1,5 +1,5 @@
 <template>
-  <b-container style="padding-top: 1rem; padding-bottom: 1rem">
+  <b-container style="padding-top: 1.5rem; padding-bottom: 1rem">
     <b-card v-if="this.startedAttempt === false" pill variant="secondary">
       {{ userQuiz.quiz.description }}
     </b-card>
@@ -167,21 +167,30 @@
                     <h3 style="margin-top: 1rem; margin-bottom: 1rem">
                       Respuestas correctas:
                       <span
-                        class="incorrectAnswers"
+                        class="warningText"
                         :class="{
-                          correctAnswers: score >= questionsNumber,
+                          highlightText: score >= questionsNumber,
                         }"
                         >{{ score }}/{{ userQuiz.quiz.questions.length }}
                       </span>
                     </h3>
-
+                    <h4 style="margin-top: 1rem; margin-bottom: 1rem">
+                      Tiempo:
+                      <span
+                        :class="{
+                          highlightText: score >= questionsNumber,
+                        }"
+                      >
+                        {{ finalTime }}
+                      </span>
+                    </h4>
                     <b-container v-if="obtainedPoints > 0">
                       <p>
                         Debido a que has mejorado tu puntuación has obtenido:
                       </p>
-                      <p class="correctAnswers">
+                      <p class="highlightText">
                         +{{ obtainedPoints }}
-                        puntos
+                        punto/s
                       </p>
                     </b-container>
 
@@ -202,25 +211,46 @@
     <h3 style="margin-top: 2rem" v-if="this.startedAttempt === false">
       Puntuación obtenida:
       <h3
-        class="incorrectAnswers"
+        class="warningText"
         :class="{
-          correctAnswers: userQuiz.correct_answers >= questionsNumber,
+          highlightText: userQuiz.correct_answers >= questionsNumber,
         }"
       >
         {{ userQuiz.correct_answers }}/{{ questionsNumber }} puntos
       </h3>
     </h3>
 
-    <b-button
+    <h4
+      style="margin-top: 1rem; margin-bottom: 3rem"
+      v-if="
+        userQuiz.correct_answers >= questionsNumber &&
+        this.startedAttempt === false
+      "
+    >
+      Mejor tiempo:
+      <span class="warningText"
+        >{{ fancyBestTimeFormat(userQuiz.best_time) }}
+      </span>
+    </h4>
+
+    <b-container
       v-if="
         this.startedAttempt === false &&
         userQuiz.tries < userQuiz.quiz.max_tries
       "
-      style="margin-top: 1rem"
-      @click="startQuizAttempt"
-      variant="secondary"
-      >Empezar nuevo intento
-    </b-button>
+    >
+      <b-button
+        style="margin-top: 1rem"
+        @click="startQuizAttempt"
+        variant="secondary"
+        >Empezar nuevo intento
+      </b-button>
+
+      <p style="margin-top: 2rem">
+        ¡Intenta acertar todas las preguntas en el menor tiempo posible!
+        <i class="bi bi-emoji-smile"></i>
+      </p>
+    </b-container>
 
     <b-badge
       v-else-if="this.startedAttempt === false"
@@ -236,14 +266,6 @@
 .quiz-image {
   border: 2px solid #555;
   pointer-events: none;
-}
-.incorrectAnswers {
-  color: rgb(240, 145, 28);
-  font-weight: bold;
-}
-.correctAnswers {
-  color: #51d990;
-  font-weight: bold;
 }
 
 .slide-fade-enter-active {
@@ -273,6 +295,9 @@ export default {
       },
       questionsNumber: "",
       startedAttempt: false,
+      startTime: null,
+      endTime: null,
+      finalTime: null,
       questionIndex: 0,
       selectedOption: "",
       userResponses: [],
@@ -297,12 +322,16 @@ export default {
         })
         .catch((error) => {
           if (error.response && error.response.status == 401) {
+            localStorage.clear();
             this.$router.push({ path: "/login", replace: true });
           }
         });
     },
+
     startQuizAttempt() {
       if (!this.quizId) return;
+
+      if (confirm("¿Listo para empezar un nuevo intento?") == false) return;
 
       const path =
         Constants.API_URL +
@@ -318,6 +347,7 @@ export default {
         .patch(path, {}, { headers })
         .then((response) => {
           if (response.status == 200) {
+            this.startTime = Date.now();
             this.userQuiz.tries++;
             this.startedAttempt = true;
             this.userResponses = Array(this.userQuiz.qui.questions.length).fill(
@@ -330,13 +360,6 @@ export default {
             console.log(error.response);
           }
         });
-    },
-
-    restartQuiz() {
-      this.questionIndex = 0;
-      this.userResponses = Array(this.userQuiz.quiz.questions.length).fill(
-        null
-      );
     },
 
     next() {
@@ -378,7 +401,44 @@ export default {
       }
     },
 
+    fancyTimeFormat(duration) {
+      // Minutes and seconds
+      const mins = ~~((duration % 3600) / 60);
+      const secs = ~~duration % 60;
+
+      // Output like "1m:01s"
+      let ret = "";
+
+      ret += "" + mins + "m " + (secs < 10 ? "0" : "");
+      ret += "" + secs + "s";
+
+      return ret;
+    },
+
+    fancyBestTimeFormat(strBestTime) {
+      // Wrong format
+      if (strBestTime.length != 15) return;
+
+      // Output like "1m:01s"
+      let ret = "";
+
+      // Check minutes
+      if (strBestTime[3] != 0) {
+        ret += strBestTime[3] + strBestTime[4] + "m ";
+      } else {
+        ret += +strBestTime[4] + "m ";
+      }
+
+      // Check seconds
+      ret += "" + strBestTime[6] + strBestTime[7] + "s";
+
+      return ret;
+    },
+
     calculateScore() {
+      this.endTime = Date.now();
+      var elapsedTime = this.endTime - this.startTime;
+
       const path =
         Constants.API_URL +
         "quizzes/" +
@@ -389,13 +449,18 @@ export default {
         Authorization: "Token " + this.$store.state.token,
       };
 
-      const parameters = { userResponses: this.userResponses };
+      const parameters = {
+        userResponses: this.userResponses,
+        elapsedTime: elapsedTime,
+      };
 
       axios
         .patch(path, parameters, { headers })
         .then((response) => {
           this.score = response.data.correct_answers;
           this.obtainedPoints = response.data.points;
+          this.finalTime = this.fancyTimeFormat(elapsedTime / 1000);
+          this.$root.updateUserInfo();
         })
         .catch((error) => {
           console.log(error);
@@ -409,8 +474,22 @@ export default {
     if (this.$store.state.isAuthenticated) {
       this.getUserQuiz(this.quizId);
     } else {
+      localStorage.clear();
       this.$router.push({ path: "/login", replace: true });
     }
+  },
+
+  beforeMount() {
+    window.addEventListener("beforeunload", (event) => {
+      if (
+        !this.startedAttempt ||
+        this.questionIndex >= this.userQuiz.quiz.questions.length
+      )
+        return;
+      event.preventDefault();
+      // Chrome requires returnValue to be set.
+      event.returnValue = "confirmReturn";
+    });
   },
 };
 </script>

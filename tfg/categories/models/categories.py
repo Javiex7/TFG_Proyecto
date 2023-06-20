@@ -1,5 +1,7 @@
 from django.db import models
+
 from categories.models.documents_files import DocumentFileModel
+from categories.models.point_packs import PointPackModel
 
 
 class CategoryModel(models.Model):
@@ -27,7 +29,14 @@ class CategoryModel(models.Model):
     )
     files = models.ManyToManyField(
         DocumentFileModel,
-        related_name="documents",
+        related_name="categories_file",
+        help_text="Archivos adicionales asignados a esta categoría",
+        blank=True
+    )
+    packs = models.ManyToManyField(
+        PointPackModel,
+        related_name="categories_pack",
+        help_text="Paquetes de muestras/imágenes asociados a esta categoría",
         blank=True
     )
     image = models.ImageField(
@@ -35,6 +44,10 @@ class CategoryModel(models.Model):
         verbose_name="Imagen",
         null=True,
         blank=True
+    )
+    order = models.PositiveIntegerField(
+        verbose_name="Orden",
+        default=0,
     )
     active = models.BooleanField(
         verbose_name="Activa",
