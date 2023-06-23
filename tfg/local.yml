@@ -1,0 +1,39 @@
+version: '3'
+
+volumes:
+  media:
+  db_postgres_data:
+
+services:
+  db:
+    container_name: db_postgres
+    image: postgres:13.0-alpine
+    volumes:
+      - db_postgres_data:/var/lib/postgresql/data:Z
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./tfg/.env
+
+  django:
+    container_name: backend_django
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: backend_django
+    volumes:
+      - media:/home/app/backend/data:Z
+    ports:
+      - "8050:8040"
+    depends_on:
+      - db
+
+  frontend:
+    container_name: frontend
+    restart: always
+    build:  
+      context: ./tfg_front
+      dockerfile: Dockerfile
+    image: vue_frontend
+    ports:
+      - 80:80

@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from corsheaders.defaults import default_headers
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-*i7nhk%fuc^f0n25=2!d00x&5*@n9syra7sk74d+h%k31$scp)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "192.168.1.13", "192.168.0.17"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 CORS_ALLOW_ALL_ORIGINS = True
@@ -43,7 +43,7 @@ CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
 
 DJOSER = {
     'PERMISSIONS': {
-        'user_list': ['rest_framework.permissions.IsAdminUser'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
     }
 
 }
@@ -125,10 +125,27 @@ WSGI_APPLICATION = 'tfg.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+env = environ.Env()
+environ.Env.read_env()
+
+# Local / Dev
+host = "127.0.0.1"
+database = "dbdjango"
+password = "73512"
+
+# Docker / Production
+host = env("POSTGRES_HOST")
+database = env("POSTGRES_DB")
+password = env("POSTGRES_PASSWORD")
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': database,
+        'USER': env("POSTGRES_USER"),
+        'PASSWORD': password,
+        'HOST': host,
+        'PORT': env("POSTGRES_PORT"),
     }
 }
 

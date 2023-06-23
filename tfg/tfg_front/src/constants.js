@@ -1,6 +1,6 @@
-const BASE_URL = "http://192.168.1.13:8000";
-const API_URL = "http://192.168.1.13:8000/api/v1.0/";
-const AUTH_URL = "http://192.168.1.13:8000/auth/";
+const BASE_URL = "http://localhost:8050";
+const API_URL = "http://localhost:8050/api/v1.0/";
+const AUTH_URL = "http://localhost:8050/auth/";
 const POINTS_PACKS_IMG_NUMBER = 4;
 
 export default {
