@@ -1,8 +1,9 @@
-version: '3'
+version: "3"
 
 volumes:
   media:
   db_postgres_data:
+  production_traefik:
 
 services:
   db:
@@ -23,10 +24,10 @@ services:
     image: backend_django
     volumes:
       - media:/home/app/backend/data:Z
-    ports:
-      - "8050:8040"
     depends_on:
       - db
+    expose:
+      - 80
 
   frontend:
     container_name: frontend
@@ -35,7 +36,22 @@ services:
       context: ./tfg_front
       dockerfile: Dockerfile
     image: vue_frontend
-    ports:
-      - 80:80
     depends_on:
       - django
+    expose:
+      - 80
+  
+  traefik:
+    container_name: traefik
+    build:
+      context: .
+      dockerfile: ./traefik/Dockerfile
+    image: traefik_front
+    depends_on:
+      - django
+      - frontend
+    volumes:
+      - production_traefik:/etc/traefik/acme:z
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"

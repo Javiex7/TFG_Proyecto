@@ -1,7 +1,9 @@
-const BASE_URL = "http://localhost:8050";
-const API_URL = "http://localhost:8050/api/v1.0/";
-const AUTH_URL = "http://localhost:8050/auth/";
+const BASE_URL = "https://api.apphistologia.top";
+const API_URL = "https://api.apphistologia.top/api/v1.0/";
+const AUTH_URL = "https://api.apphistologia.top/auth/";
 const POINTS_PACKS_IMG_NUMBER = 4;
+
+// Change URL if debugging/local
 
 export default {
   BASE_URL: BASE_URL,

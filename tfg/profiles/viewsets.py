@@ -14,6 +14,9 @@ class ProfileViewSet(GenericViewSet):
     queryset = Profile.objects.all()
     http_method_names = ['get', 'patch']
 
+    def get_serializer_class(self):
+        return ProfileSerializer
+
     @action(detail=False, methods=['get'])
     def getProfile(self, request, *args, **kwargs):
         # Get the associated profile of the authenticated user

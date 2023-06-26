@@ -1,0 +1,75 @@
+log:
+  level: INFO
+
+entryPoints:
+  # https://docs.traefik.io/routing/entrypoints/#entrypoint
+
+  web:
+    # http
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+
+  websecure:
+    # https
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    # https://docs.traefik.io/master/https/acme/#lets-encrypt
+    acme:
+      email: "javiexalonso@gmail.com"
+      storage: /etc/traefik/acme/acme.json
+      # https://docs.traefik.io/master/https/acme/#httpchallenge
+      httpChallenge:
+        entryPoint: web
+
+http:
+  routers:
+  
+    # https://docs.traefik.io/master/routing/routers/#certresolver
+
+    django:
+      rule: "Host(`api.apphistologia.top`)"
+      entryPoints:
+        - websecure
+      middlewares:
+        - csrf
+      service: django
+      tls:
+        certResolver: letsencrypt
+
+    frontend:
+      rule: "Host(`apphistologia.top`) || Host(`www.apphistologia.top`)"
+      entryPoints:
+        - websecure
+      middlewares:
+        - csrf
+      service: frontend
+      tls:
+        certResolver: letsencrypt
+
+  middlewares:
+    csrf:
+      # https://docs.traefik.io/master/middlewares/headers/#hostsproxyheaders
+      # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+      headers:
+        hostsProxyHeaders: ["X-CSRFToken"]
+
+  services:
+    django:
+      loadBalancer:
+        servers:
+          - url: http://django:8050
+    frontend:
+      loadBalancer:
+        servers:
+          - url: http://frontend:80
+
+providers:
+  # https://docs.traefik.io/master/providers/file/
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true

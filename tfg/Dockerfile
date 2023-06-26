@@ -24,7 +24,7 @@ COPY . $HOME
 RUN pip install -r requirements.txt  
 
 # Port where the Django app runs  
-EXPOSE 8040 
+# EXPOSE 8040 -> Local docker
 
 # Start server   
-CMD python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8040
+CMD python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8050
