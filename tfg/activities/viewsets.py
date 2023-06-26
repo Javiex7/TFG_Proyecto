@@ -92,9 +92,9 @@ class UserQuizViewSet(GenericViewSet, RetrieveModelMixin):
             if i in questions:
                 correctOptions += 1
 
-        # Check the elapsed time when improving the previous score
+        # Check the elapsed time when improving the previous time
         saveElapsedTime = False
-        if correctOptions >= user_quiz.correct_answers:
+        if correctOptions == len(user_quiz.quiz.questions.values_list()):
             elapsedTime = datetime.timedelta(
                 milliseconds=elapsedTime)  # Miliseconds to seconds
             if not user_quiz.best_time or user_quiz.best_time > elapsedTime:

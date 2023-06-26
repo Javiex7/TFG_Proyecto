@@ -70,56 +70,60 @@
                     </h3>
 
                     <b-img
+                      style="margin-top: 1.5rem"
                       v-if="userQuiz.quiz.questions[questionIndex].image"
                       :src="userQuiz.quiz.questions[questionIndex].image"
-                      rounded="pill"
                       pointer-events="none"
-                      width="300rem"
-                      height="300rem"
+                      width="265rem"
+                      height="265rem"
                       class="quiz-image"
                     />
 
                     <!-- Question options -->
-                    <b-form-group buttons v-slot="{ ariaDescribedby }">
-                      <b-form-radio-group
+                    <b-row
+                      style="margin-top: 1.5rem"
+                      class="justify-content-center"
+                      ><b-form-group
+                        style="max-width: fit-content; text-align: start"
+                        class="justify-content-center"
                         buttons
-                        stacked
-                        button-variant="outline-primary"
+                        v-slot="{ ariaDescribedby }"
                       >
                         <b-form-radio
-                          style="margin-top: 1rem"
+                          style="padding-top: 1rem"
                           v-model="selectedOption"
                           value="A"
+                          text="Uwuuuuuuu"
                           :aria-describedby="ariaDescribedby"
-                          >a.
+                          >A.
                           {{ userQuiz.quiz.questions[questionIndex].option_a }}
                         </b-form-radio>
                         <b-form-radio
-                          style="margin-top: 1rem"
+                          style="padding-top: 1rem"
                           v-model="selectedOption"
                           value="B"
                           :aria-describedby="ariaDescribedby"
-                          >b.
+                          >B.
                           {{ userQuiz.quiz.questions[questionIndex].option_b }}
                         </b-form-radio>
                         <b-form-radio
-                          style="margin-top: 1rem"
+                          style="padding-top: 1rem"
                           v-model="selectedOption"
                           value="C"
                           :aria-describedby="ariaDescribedby"
-                          >c.
+                          >C.
                           {{ userQuiz.quiz.questions[questionIndex].option_c }}
                         </b-form-radio>
                         <b-form-radio
-                          style="margin-top: 1rem"
+                          style="padding-top: 1rem"
                           v-model="selectedOption"
                           value="D"
                           :aria-describedby="ariaDescribedby"
-                          >d.
+                          >D.
                           {{ userQuiz.quiz.questions[questionIndex].option_d }}
                         </b-form-radio>
-                      </b-form-radio-group>
-                    </b-form-group>
+                      </b-form-group></b-row
+                    >
 
                     <!-- Footer with navigation -->
                     <b-card-footer style="margin-top: 2rem">
@@ -264,7 +268,8 @@
 
 <style scoped>
 .quiz-image {
-  border: 2px solid #555;
+  border: 2px solid #454444;
+  border-radius: 20%;
   pointer-events: none;
 }
 

@@ -1,3 +1,6 @@
+# Media files #
+data
+
 # SSH Keys #
 ssh
 
@@ -54,6 +57,7 @@ atlassian-ide-plugin.xml
 # Python # 
 *.py[cod] 
 *$py.class 
+__pycache__
 
 # Distribution / packaging 
 .Python build/ 
