@@ -13,6 +13,10 @@
             contenido adicional en forma de tests y acceso a muestras
             histológicas. Revisa con tu profesor/encargado las recompensas,
             normas y elementos asociados a la evaluación y uso de la aplicación.
+            <br />
+            <br />
+            Recuerda iniciar sesión / registrarte para poder realizar los
+            cuestionarios y no perder tu progreso.
           </p>
         </b-row>
         <b-row style="margin-top: 1rem">
