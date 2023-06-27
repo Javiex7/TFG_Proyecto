@@ -4,6 +4,7 @@ from categories.models import CategoryModel
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'active']
+    search_fields = ['title']
     filter_horizontal = ['files', 'packs']
 
 

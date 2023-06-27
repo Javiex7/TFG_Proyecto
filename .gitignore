@@ -1,6 +1,9 @@
 # Media files #
 data
 
+# Python cache #
+__pycache__
+
 # SSH Keys #
 ssh
 
