@@ -329,6 +329,27 @@ export default {
         });
     },
 
+    shuffleQuestions(questions) {
+      // Fisher–Yates shuffle
+      let currentIndex = questions.length,
+        randomIndex;
+
+      // While there remain elements to shuffle.
+      while (currentIndex != 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [questions[currentIndex], questions[randomIndex]] = [
+          questions[randomIndex],
+          questions[currentIndex],
+        ];
+      }
+
+      return questions;
+    },
+
     startQuizAttempt() {
       if (!this.quizId) return;
 
@@ -348,12 +369,15 @@ export default {
         .patch(path, {}, { headers })
         .then((response) => {
           if (response.status == 200) {
+            this.userQuiz.quiz.questions = this.shuffleQuestions(
+              this.userQuiz.quiz.questions
+            );
             this.startTime = Date.now();
             this.userQuiz.tries++;
             this.startedAttempt = true;
-            this.userResponses = Array(this.userQuiz.qui.questions.length).fill(
-              null
-            );
+            this.userResponses = Array(
+              this.userQuiz.quiz.questions.length
+            ).fill(null);
           }
         })
         .catch((error) => {
