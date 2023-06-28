@@ -49,16 +49,13 @@
                             100
                           "
                           max="100"
-                        >
-                          {{
-                            (questionIndex / userQuiz.quiz.questions.length) *
-                            100
-                          }}%
-                        </progress>
+                        ></progress>
                         <p>
                           {{
-                            (questionIndex / userQuiz.quiz.questions.length) *
-                            100
+                            Math.trunc(
+                              (questionIndex / userQuiz.quiz.questions.length) *
+                                100
+                            )
                           }}% completo
                         </p>
                       </div>
@@ -74,8 +71,7 @@
                       v-if="userQuiz.quiz.questions[questionIndex].image"
                       :src="userQuiz.quiz.questions[questionIndex].image"
                       pointer-events="none"
-                      width="265rem"
-                      height="265rem"
+                      width="300rem"
                       class="quiz-image"
                     />
 
@@ -269,7 +265,7 @@
 <style scoped>
 .quiz-image {
   border: 2px solid #454444;
-  border-radius: 20%;
+  border-radius: 5%;
   pointer-events: none;
 }
 

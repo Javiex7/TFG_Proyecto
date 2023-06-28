@@ -14,7 +14,7 @@ class UserQuizAdmin(admin.ModelAdmin):
     customTime.short_description = 'Mejor tiempo'
 
     list_display = ['id', 'user', 'quiz']
-    search_fields = ['user__email', 'quiz__name']
+    search_fields = ['user__email', 'quiz__name', 'quiz__code']
     readonly_fields = ('customTime',)
 
     fieldsets = [
