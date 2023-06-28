@@ -65,12 +65,11 @@
             <b-card
               :img-alt="image.name"
               :img-src="image.image"
-              img-height="300rem"
               img-top
               style="max-width: 20rem"
               border-variant="secondary"
             >
-              <b-card-title :text="image.name" tag="h3" />
+              <b-card-title :text="image.name" tag="h5" />
             </b-card>
           </p>
         </label>
